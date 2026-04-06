@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\test",
+    "\\src\\test\\java",
+    "\\src\\test\\java\\fatec",
+    "\\src\\test\\java\\fatec\\com",
+    "\\src\\test\\java\\fatec\\com\\product"
+  ],
+  "SelectedNode": "\\src\\test\\java\\fatec\\com\\product\\ProductApplicationTests.java",
+  "PreviewInSolutionExplorer": false
+}
