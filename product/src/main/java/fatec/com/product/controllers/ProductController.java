@@ -3,15 +3,18 @@ package fatec.com.product.controllers;
 
 import java.util.ArrayList;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 //use a classe Product para criar os objetos que serao retornados pela API
 import fatec.com.product.models.Product;
+import fatec.com.product.models.SpecialProduct;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController // responde via web
@@ -40,10 +43,14 @@ public class ProductController {
         Product p3 = new Product(3L, "Fone de Ouvido", 200.00,
                 "Fone de ouvido sem fio com cancelamento de ruído e bateria de longa duração.");
 
+        SpecialProduct p4 = new SpecialProduct(4L, "Tablet", 1000.00,
+                "Tablet com tela de 10 polegadas e processador rápido.", 0.10);
+
         // add objetos na lista de produtos
         products.add(p1);
         products.add(p2);
         products.add(p3);
+        products.add(p4);
 
     }
 
@@ -63,10 +70,66 @@ public class ProductController {
         return products;
     }
 
-    @PostMapping //"quando o metodo post for acionado execute essa função"
+    @PostMapping // "quando o metodo post for acionado execute essa função"
     public Product createProduct(@RequestBody Product product) {
         products.add(product);
         return product;
+    }
+
+    //add caso o produto seja especial ou não, para isso é necessário verificar se o produto que esta chegando tem o campo desconto
+    @PostMapping("/special")
+    public SpecialProduct createSpecialProduct(
+            @RequestBody SpecialProduct product) {
+
+        products.add(product);
+
+        return product;
+    }
+
+    @PutMapping("/{id}")
+    public Product updateProduct(@PathVariable Long id,
+            @RequestBody Product updatedProduct) {
+
+        for (Product product : products) {
+
+            if (product.getId().equals(id)) {
+
+                product.setName(updatedProduct.getName());
+                product.setPrice(updatedProduct.getPrice());
+                product.setDescription(updatedProduct.getDescription());
+
+                // 1° condição verificar se o produto que esta na lista é do tipo SpecialProduct
+                if (product instanceof SpecialProduct) {
+
+                    // campo desconto
+                    Double newDiscount =
+                        ((SpecialProduct) updatedProduct).getDiscount(); //permite que o produto seja tratado como um SpecialProduct
+
+                    ((SpecialProduct) product)
+                            .setDiscount(newDiscount);
+                    }
+
+                return product;
+            }
+        }
+
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+
+        for (Product product : products) {
+
+            if (product.getId().equals(id)) {
+
+                products.remove(product);
+
+                return "Produto removido com sucesso!";
+            }
+        }
+
+        return "Produto não encontrado.";
     }
 }
 // obs.: p -> variável que guarda o obj; P-> classe/tipo

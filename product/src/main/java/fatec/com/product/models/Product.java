@@ -41,4 +41,6 @@ public class Product {
         this.description = description;
     }
 
+    public Product() {
+    }
 }
