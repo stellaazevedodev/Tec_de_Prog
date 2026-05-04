@@ -4,8 +4,12 @@ import java.util.ArrayList;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 //use a classe Product para criar os objetos que serao retornados pela API
 import fatec.example.musicas.models.Music;
@@ -19,14 +23,14 @@ public class MusicController {
     private ArrayList<Music> musics = new ArrayList<>();
 
     public MusicController() {
-        //usando metodo construtor completo
+        // usando metodo construtor completo
         Music m1 = new Music(1L, "Until I Found You", "Stephen Sanchez", "Easy on My Eyes", 2021);
         Music m2 = new Music(2L, "As It Was", "Harry Styles", "Harry's House", 2022);
         Music m3 = new Music(3L, "Bad Habit", "Steve Lacy", "Gemini Rights", 2022);
         Music m4 = new Music(4L, "Easy on My Eyes", "Stephen Sanchez", "Easy on My Eyes", 2021);
         Music m5 = new Music(5L, "Shivers", "Ed Sheeran", "=", 2021);
 
-        //usando metodo construtor vazio
+        // usando metodo construtor vazio
         Music m6 = new Music();
         m6.setName("Sinais");
         m6.setArtist("Luan Santana");
@@ -55,5 +59,50 @@ public class MusicController {
     @GetMapping
     public ArrayList<Music> getMusics() {
         return musics;
+    }
+
+    // add nova musica a lista de musicas usando o metodo POST
+    @PostMapping
+    public Music createMusic(@RequestBody Music music) {
+        musics.add(music);
+        return music;
+    }
+
+    // PUT editando conforme o id enviado no corpo da requisicao
+    @PutMapping("/{id}")
+    public Music updateMusic(@PathVariable Long id,
+                             @RequestBody Music updatedMusic){
+
+        for(Music music : musics){ // percorrendo a lista de musicas e pegando cada musica
+
+            if(music.getId().equals(id)){ // verificando se o id da musica atual é igual ao id enviado na requisicao
+
+                music.setName(updatedMusic.getName());
+                music.setArtist(updatedMusic.getArtist());
+                music.setAlbum(updatedMusic.getAlbum());
+                music.setYear(updatedMusic.getYear());
+
+                return music;
+            }
+        }
+
+        return null;
+    }
+
+    // deletando uma musica (mesma logica do PUT)
+    @DeleteMapping("/{id}")
+    public String deleteMusic(@PathVariable Long id){
+
+        for(Music music : musics){
+
+            if(music.getId().equals(id)){
+
+                musics.remove(music);
+
+                return "Música removida com sucesso!";
+            }
+        }
+
+        return "Música não encontrada.";
     }
 }
