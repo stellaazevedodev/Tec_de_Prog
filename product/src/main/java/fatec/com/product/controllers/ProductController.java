@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 //use a classe Product para criar os objetos que serao retornados pela API
 import fatec.com.product.models.Product;
 import fatec.com.product.models.SpecialProduct;
-import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController // responde via web
 @RequestMapping("/products")
